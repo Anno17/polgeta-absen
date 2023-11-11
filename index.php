@@ -12,7 +12,7 @@ if (isset($_GET['error']) && $_GET['error'] === 'pegawai_sudah_absen') {
     <h3>SELAMAT DATANG DI SISTEM KEHADIRAN POLGETA</h3>
     <div class="content">
         <div class="absence-column">
-            <h5>INPUT ABSEN</h5>
+            <h5>INPUT ABSEN POLGETA CUY</h5>
             <form action="controller/absen.php" method="POST">
                 <table>
                     <tr>
