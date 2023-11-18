@@ -11,6 +11,6 @@
     <head>
         <nav>
             <span class='app-name'><h2>POLGETA Attendance System</h2></span>
-            <span class='app-navtop'><a href="index.php">Beranda</a><a href="pegawai.php">Pegawai</a><a href="gaji.php">Gaji</a></span>
+            <span class='app-navtop'><button><a href="index.php">Beranda</a></button><button><a href="pegawai.php">Pegawai</a></button><button><a href="gaji.php">Gaji</a></button><button><a href="pendidikan.php">Pendidikan</a></button><button><a href="jabatan.php">Jabatan</a></button></span>
         </nav>
     </head>

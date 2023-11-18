@@ -15,18 +15,20 @@ $result = mysqli_query($conn, $query);
             
             <table border=1>
             <tr>
-                <th>Id</th>
+                <th>No</th>
                 <th>Kode</th>
                 <th>Nama</th>
                 <th>Kelamin</th>
                 <th>Alamat</th>
                 <th>Pendidikan</th>
                 <th>Jabatan</th>
+                <th>Aksi</th>
             </tr>
             <?php
-            $id=0;
+            $no=0;
         while ($data = mysqli_fetch_array($result)) {
-            $id++;
+            $no++;
+            $id= $data ['id_pegawai'];
             $kode = $data['kode_pegawai'];
             $nama= $data['nama_pegawai'];
             $kelamin = $data['jenis_kelamin'];
@@ -36,14 +38,14 @@ $result = mysqli_query($conn, $query);
         
         ?>
         <tr>
-            <td><?php echo $id; ?></td>
+            <td><?php echo $no; ?></td>
             <td><?php echo $kode; ?></td>
             <td><?php echo $nama; ?></td>
             <td><?php echo $kelamin; ?></td>
             <td><?php echo $alamat; ?></td>
             <td><?php echo $pendidikan; ?></td>
             <td><?php echo $jabatan; ?></td>
-            <td><?php echo "<a href='controller/pegawai.php?kode=".$kode."'>Hapus</a> | <a href='forms/pegawai/input.php?id".$kode."'>Edit</a>"; ?></td>
+            <td><?php echo "<a href='controller/pegawai.php?kode=".$kode."'>Hapus</a> | <a href='forms/pegawai/edit.php?kode=".$kode."'>Edit</a>"; ?></td>
         </tr>
         <?php } ?>
             </table>

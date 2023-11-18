@@ -8,11 +8,11 @@ if (isset($_POST["input"])) {
     $pendidikan = $_POST ['pendidikan'];
     $jabatan = $_POST ['jabatan'];
    
-    $sql= "INSERT INTO pegawai (kode,nama,jenis_kelamin,alamat,pendidikan_id,jabatan_id) VALUE ($kode,$nama,$jk,$alamat,$pendidikan,$jabatan)";
+    $sql= "INSERT INTO pegawai (kode,nama,jenis_kelamin,alamat,pendidikan_id,jabatan_id) VALUE ('$kode','$nama','$jk','$alamat','$pendidikan','$jabatan')";
     
     if ($conn->query($sql) === true) {
         // Jika berhasil, arahkan kembali ke halaman yang sama
-        header("Location: ../index.php");
+        header("Location: ../pegawai.php");
         exit; // Penting untuk menghentikan eksekusi kode selanjutnya
     } else {
         header("Location: ../pegawai.php");
@@ -33,11 +33,11 @@ if (isset($_POST["edit"])) {
     $pendidikan = $_POST ['pendidikan'];
     $jabatan = $_POST ['jabatan'];
    
-    $sql= "UPDATE pegawai SET kode=$kode, nama=$nama, jenis_kelamin=$jk, alamat=$alamat, pendidikan_id=$pendidikan, jabatan_id=$jabatan";
+    $sql = "UPDATE pegawai SET kode='$kode', nama='$nama', jenis_kelamin='$jk', alamat='$alamat', pendidikan_id=$pendidikan, jabatan_id=$jabatan WHERE kode='$kode'";
     
     if ($conn->query($sql) === true) {
         // Jika berhasil, arahkan kembali ke halaman yang sama
-        header("Location: ../index.php");
+        header("Location: ../pegawai.php");
         exit; // Penting untuk menghentikan eksekusi kode selanjutnya
     } else {
         header("Location: ../pegawai.php");

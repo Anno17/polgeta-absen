@@ -17,7 +17,7 @@
             <tr>
                 <td>Penambahan</td>
                 <td>:</td>
-                <td><input type="number" name="penambahan"></td>
+                <td><input type="text" name="penambahan"></td>
             </tr>
             <tr>
                 <td><button type="submit" name='input'>Simpan</button></td>
