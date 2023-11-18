@@ -33,25 +33,23 @@ CREATE TABLE IF NOT EXISTS `absen` (
   KEY `FK_absen_pegawai` (`kode_pegawai`) USING BTREE,
   CONSTRAINT `FK_absen_keterangan` FOREIGN KEY (`keterangan_id`) REFERENCES `keterangan` (`id`),
   CONSTRAINT `FK_absen_pegawai` FOREIGN KEY (`kode_pegawai`) REFERENCES `pegawai` (`kode`)
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table db_pegawai.absen: ~4 rows (approximately)
+-- Dumping data for table db_pegawai.absen: ~0 rows (approximately)
 REPLACE INTO `absen` (`id`, `kode_pegawai`, `keterangan_id`, `tanggal`, `jam_masuk`, `jam_keluar`) VALUES
-	(16, 'k001', 1, '2023-11-05', '15:14:46', '15:14:46'),
-	(18, 'k001', 1, '2023-11-04', '22:16:01', NULL),
-	(21, 'k002', 1, '2023-11-05', '15:16:42', NULL),
-	(22, 'k002', 1, '2023-11-04', '22:43:11', '22:43:13');
+	(35, 'k001', 1, '2023-11-17', '06:30:28', '13:40:56'),
+	(36, 'k001', 1, '2023-11-18', '13:40:56', '13:40:56');
 
 -- Dumping structure for table db_pegawai.bpjs
 CREATE TABLE IF NOT EXISTS `bpjs` (
   `id` int NOT NULL DEFAULT '1',
-  `potongan` decimal(20,6) DEFAULT NULL,
+  `potongan` decimal(10,2) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table db_pegawai.bpjs: ~1 rows (approximately)
+-- Dumping data for table db_pegawai.bpjs: ~0 rows (approximately)
 REPLACE INTO `bpjs` (`id`, `potongan`) VALUES
-	(1, 0.020000);
+	(1, 0.02);
 
 -- Dumping structure for table db_pegawai.gaji
 CREATE TABLE IF NOT EXISTS `gaji` (
@@ -72,13 +70,14 @@ REPLACE INTO `gaji` (`id`, `jabatan_id`, `gaji_perhari`) VALUES
 CREATE TABLE IF NOT EXISTS `jabatan` (
   `id` int NOT NULL AUTO_INCREMENT,
   `nama` varchar(50) NOT NULL DEFAULT '0',
+  `penambahan` int DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Dumping data for table db_pegawai.jabatan: ~2 rows (approximately)
-REPLACE INTO `jabatan` (`id`, `nama`) VALUES
-	(1, 'Staff'),
-	(2, 'Manager');
+REPLACE INTO `jabatan` (`id`, `nama`, `penambahan`) VALUES
+	(1, 'Staff', NULL),
+	(2, 'Manager', NULL);
 
 -- Dumping structure for table db_pegawai.keterangan
 CREATE TABLE IF NOT EXISTS `keterangan` (
@@ -102,38 +101,34 @@ CREATE TABLE IF NOT EXISTS `pegawai` (
   `alamat` text NOT NULL,
   `pendidikan_id` int NOT NULL DEFAULT '0',
   `jabatan_id` int NOT NULL DEFAULT '0',
-  `bpjs_id` int DEFAULT '1',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `kode` (`kode`),
+  PRIMARY KEY (`kode`) USING BTREE,
+  UNIQUE KEY `unique` (`id`) USING BTREE,
   KEY `FK_pegawai_pendidikan` (`pendidikan_id`),
   KEY `FK_pegawai_jabatan` (`jabatan_id`),
-  KEY `FK_pegawai_bpjs` (`bpjs_id`),
-  CONSTRAINT `FK_pegawai_bpjs` FOREIGN KEY (`bpjs_id`) REFERENCES `bpjs` (`id`),
   CONSTRAINT `FK_pegawai_jabatan` FOREIGN KEY (`jabatan_id`) REFERENCES `jabatan` (`id`),
   CONSTRAINT `FK_pegawai_pendidikan` FOREIGN KEY (`pendidikan_id`) REFERENCES `pendidikan` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table db_pegawai.pegawai: ~0 rows (approximately)
-REPLACE INTO `pegawai` (`id`, `kode`, `nama`, `jenis_kelamin`, `alamat`, `pendidikan_id`, `jabatan_id`, `bpjs_id`) VALUES
-	(1, 'k001', 'Jaka', 'L', 'cikadut', 1, 1, 1),
-	(2, 'k002', 'iki', 'L', 'CIPAJARAN', 1, 2, 1);
+-- Dumping data for table db_pegawai.pegawai: ~1 rows (approximately)
+REPLACE INTO `pegawai` (`id`, `kode`, `nama`, `jenis_kelamin`, `alamat`, `pendidikan_id`, `jabatan_id`) VALUES
+	(4, 'k001', 'jaka', 'L', 'Dago', 1, 1);
 
 -- Dumping structure for table db_pegawai.pendidikan
 CREATE TABLE IF NOT EXISTS `pendidikan` (
   `id` int NOT NULL AUTO_INCREMENT,
   `nama` varchar(50) NOT NULL DEFAULT '0',
-  `penambahan` decimal(20,6) NOT NULL DEFAULT '0.000000',
+  `penambahan` decimal(10,2) NOT NULL DEFAULT '0.00',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Dumping data for table db_pegawai.pendidikan: ~2 rows (approximately)
 REPLACE INTO `pendidikan` (`id`, `nama`, `penambahan`) VALUES
-	(1, 'SMA (Sederajat)', 0.050000),
-	(2, 'S1', 0.100000);
+	(1, 'SMA (Sederajat)', 0.05),
+	(2, 'S1', 0.10);
 
 -- Dumping structure for procedure db_pegawai.sp_gaji_total
 DELIMITER //
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_gaji_total`()
+CREATE PROCEDURE `sp_gaji_total`()
 BEGIN
 SELECT
     YEAR(`absen`.`tanggal`) AS `tahun`,
@@ -152,26 +147,9 @@ SELECT
     `gaji`.`gaji_perhari` AS `gaji_perhari`,
     `pendidikan`.`penambahan` AS `penambahan`,
     `bpjs`.`potongan` AS `potongan_bpjs`,
-    CAST(
-        (
-            (
-                SUM(CASE WHEN `absen`.`keterangan_id` = 1 THEN 1 ELSE 0 END) * `gaji`.`gaji_perhari`
-            ) * `pendidikan`.`penambahan`
-        ) + (SUM(CASE WHEN `absen`.`keterangan_id` = 1 THEN 1 ELSE 0 END) * `gaji`.`gaji_perhari`) AS DECIMAL(10, 2)
-    ) AS `total_gaji`,
-    CAST(
-        (
-            (
-                SUM(CASE WHEN `absen`.`keterangan_id` = 1 THEN 1 ELSE 0 END) * `gaji`.`gaji_perhari`
-            ) * `pendidikan`.`penambahan`
-        ) + (SUM(CASE WHEN `absen`.`keterangan_id` = 1 THEN 1 ELSE 0 END) * `gaji`.`gaji_perhari`)
-    * `bpjs`.`potongan` AS DECIMAL(10, 2)
-    ) AS `potongan_gaji`,
-    CAST(
-        (
-            SUM(CASE WHEN `absen`.`keterangan_id` = 1 THEN 1 ELSE 0 END) * `gaji`.`gaji_perhari`
-        ) * `pendidikan`.`penambahan` AS DECIMAL(10, 2)
-    ) AS `plus_gaji`
+    CAST(((((sum((case when (`absen`.`keterangan_id` = 1) then 1 else 0 end)) * `gaji`.`gaji_perhari`) * `pendidikan`.`penambahan`) + (sum((case when (`absen`.`keterangan_id` = 1) then 1 else 0 end)) * `gaji`.`gaji_perhari`)) - ((((sum((case when (`absen`.`keterangan_id` = 1) then 1 else 0 end)) * `gaji`.`gaji_perhari`) * `pendidikan`.`penambahan`) + (sum((case when (`absen`.`keterangan_id` = 1) then 1 else 0 end)) * `gaji`.`gaji_perhari`)) * `bpjs`.`potongan`)) AS signed) AS `total_gaji`,
+	 CAST(((((sum((case when (`absen`.`keterangan_id` = 1) then 1 else 0 end)) * `gaji`.`gaji_perhari`) * `pendidikan`.`penambahan`) + (sum((case when (`absen`.`keterangan_id` = 1) then 1 else 0 end)) * `gaji`.`gaji_perhari`)) * `bpjs`.`potongan`) AS signed) AS `potongan_gaji`,
+	 CAST(((sum((case when (`absen`.`keterangan_id` = 1) then 1 else 0 end)) * `gaji`.`gaji_perhari`) * `pendidikan`.`penambahan`) AS signed) AS `plus_gaji` 
 FROM
     `pegawai`
 LEFT JOIN
@@ -207,6 +185,54 @@ CREATE TABLE `vw_absen` (
 	`jam_keluar` TIME NULL
 ) ENGINE=MyISAM;
 
+-- Dumping structure for procedure db_pegawai.vw_gaji_total
+DELIMITER //
+CREATE PROCEDURE `vw_gaji_total`()
+BEGIN
+SELECT
+    YEAR(absen.tanggal) AS tahun,
+    MONTH(absen.tanggal) AS bulan,
+    pegawai.id AS id_pegawai,
+    pegawai.kode AS kode_pegawai,
+    pegawai.nama AS nama_pegawai,
+    pegawai.jenis_kelamin AS jenis_kelamin,
+    pegawai.pendidikan_id AS pendidikan_id,
+    pendidikan.nama AS nama_pendidikan,
+    pegawai.jabatan_id AS jabatan_id,
+    jabatan.nama AS nama_jabatan,
+    SUM(CASE WHEN absen.keterangan_id = 1 THEN 1 ELSE 0 END) AS total_hadir,
+    SUM(CASE WHEN absen.keterangan_id = 2 THEN 1 ELSE 0 END) AS total_tidakhadir,
+    SUM(CASE WHEN absen.keterangan_id = 3 THEN 1 ELSE 0 END) AS total_sakit,
+    ANY_VALUE(gaji.gaji_perhari) AS gaji_perhari,
+    gaji.gaji_perhari AS gaji_perhari,
+    pendidikan.penambahan AS penambahan,
+    bpjs.potongan AS potongan_bpjs,
+    (
+        (SUM(CASE WHEN absen.keterangan_id = 1 THEN 1 ELSE 0 END) * gaji.gaji_perhari * pendidikan.penambahan)
+        + (SUM(CASE WHEN absen.keterangan_id = 1 THEN 1 ELSE 0 END) * gaji.gaji_perhari)
+    ) AS total_gaji_hadir,
+    (
+        SUM(CASE WHEN absen.keterangan_id = 1 THEN 1 ELSE 0 END) * gaji.gaji_perhari * bpjs.potongan
+    ) AS potongan_gaji,
+    (
+        SUM(CASE WHEN absen.keterangan_id = 1 THEN 1 ELSE 0 END) * gaji.gaji_perhari * pendidikan.penambahan
+    ) AS plus_gaji
+FROM                    
+   pegawai
+   LEFT JOIN jabatan ON (jabatan.id = pegawai.jabatan_id)                    
+   LEFT JOIN pendidikan ON (pendidikan.id = pegawai.pendidikan_id)             
+   LEFT JOIN gaji ON (gaji.jabatan_id = pegawai.jabatan_id)
+   LEFT JOIN absen ON (absen.kode_pegawai = pegawai.kode)
+	LEFT JOIN keterangan ON (keterangan.id = absen.keterangan_id)
+	LEFT JOIN bpjs ON 0 <> 1
+GROUP BY
+    YEAR(absen.tanggal),
+    MONTH(absen.tanggal),
+    pegawai.id;
+
+END//
+DELIMITER ;
+
 -- Dumping structure for view db_pegawai.vw_gaji_total
 -- Creating temporary table to overcome VIEW dependency errors
 CREATE TABLE `vw_gaji_total` (
@@ -224,11 +250,11 @@ CREATE TABLE `vw_gaji_total` (
 	`total_tidakhadir` DECIMAL(23,0) NULL,
 	`total_sakit` DECIMAL(23,0) NULL,
 	`gaji_perhari` INT(10) NULL,
-	`penambahan` DECIMAL(20,6) NULL,
-	`potongan_bpjs` DECIMAL(20,6) NULL,
-	`total_gaji` DECIMAL(65,12) NULL,
-	`potongan_gaji` DECIMAL(65,12) NULL,
-	`plus_gaji` DECIMAL(53,6) NULL
+	`penambahan` DECIMAL(10,2) NULL,
+	`potongan_bpjs` DECIMAL(10,2) NULL,
+	`total_gaji` DECIMAL(55,4) NULL,
+	`potongan_gaji` DECIMAL(54,4) NULL,
+	`plus_gaji` DECIMAL(43,2) NULL
 ) ENGINE=MyISAM;
 
 -- Dumping structure for view db_pegawai.vw_pegawai
@@ -248,17 +274,17 @@ CREATE TABLE `vw_pegawai` (
 -- Dumping structure for view db_pegawai.vw_absen
 -- Removing temporary table and create final VIEW structure
 DROP TABLE IF EXISTS `vw_absen`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_absen` AS select `absen`.`id` AS `id`,`absen`.`kode_pegawai` AS `kode_pegawai`,`pegawai`.`nama` AS `nama_pegawai`,`absen`.`keterangan_id` AS `keterangan_id`,`keterangan`.`nama` AS `keterangan`,`absen`.`tanggal` AS `tanggal_absen`,`absen`.`jam_masuk` AS `jam_masuk`,`absen`.`jam_keluar` AS `jam_keluar` from ((`absen` left join `pegawai` on((`pegawai`.`kode` = `absen`.`kode_pegawai`))) left join `keterangan` on((`keterangan`.`id` = `absen`.`keterangan_id`)));
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `vw_absen` AS select `absen`.`id` AS `id`,`absen`.`kode_pegawai` AS `kode_pegawai`,`pegawai`.`nama` AS `nama_pegawai`,`absen`.`keterangan_id` AS `keterangan_id`,`keterangan`.`nama` AS `keterangan`,`absen`.`tanggal` AS `tanggal_absen`,`absen`.`jam_masuk` AS `jam_masuk`,`absen`.`jam_keluar` AS `jam_keluar` from ((`absen` left join `pegawai` on((`pegawai`.`kode` = `absen`.`kode_pegawai`))) left join `keterangan` on((`keterangan`.`id` = `absen`.`keterangan_id`)));
 
 -- Dumping structure for view db_pegawai.vw_gaji_total
 -- Removing temporary table and create final VIEW structure
 DROP TABLE IF EXISTS `vw_gaji_total`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_gaji_total` AS select year(`absen`.`tanggal`) AS `tahun`,month(`absen`.`tanggal`) AS `bulan`,`pegawai`.`id` AS `id_pegawai`,`pegawai`.`kode` AS `kode_pegawai`,`pegawai`.`nama` AS `nama_pegawai`,`pegawai`.`jenis_kelamin` AS `jenis_kelamin`,`pegawai`.`pendidikan_id` AS `pendidikan_id`,`pendidikan`.`nama` AS `nama_pendidikan`,`pegawai`.`jabatan_id` AS `jabatan_id`,`jabatan`.`nama` AS `nama_jabatan`,sum((case when (`absen`.`keterangan_id` = 1) then 1 else 0 end)) AS `total_hadir`,sum((case when (`absen`.`keterangan_id` = 2) then 1 else 0 end)) AS `total_tidakhadir`,sum((case when (`absen`.`keterangan_id` = 3) then 1 else 0 end)) AS `total_sakit`,`gaji`.`gaji_perhari` AS `gaji_perhari`,`pendidikan`.`penambahan` AS `penambahan`,`bpjs`.`potongan` AS `potongan_bpjs`,((((sum((case when (`absen`.`keterangan_id` = 1) then 1 else 0 end)) * `gaji`.`gaji_perhari`) * `pendidikan`.`penambahan`) + (sum((case when (`absen`.`keterangan_id` = 1) then 1 else 0 end)) * `gaji`.`gaji_perhari`)) - ((((sum((case when (`absen`.`keterangan_id` = 1) then 1 else 0 end)) * `gaji`.`gaji_perhari`) * `pendidikan`.`penambahan`) + (sum((case when (`absen`.`keterangan_id` = 1) then 1 else 0 end)) * `gaji`.`gaji_perhari`)) * `bpjs`.`potongan`)) AS `total_gaji`,((((sum((case when (`absen`.`keterangan_id` = 1) then 1 else 0 end)) * `gaji`.`gaji_perhari`) * `pendidikan`.`penambahan`) + (sum((case when (`absen`.`keterangan_id` = 1) then 1 else 0 end)) * `gaji`.`gaji_perhari`)) * `bpjs`.`potongan`) AS `potongan_gaji`,((sum((case when (`absen`.`keterangan_id` = 1) then 1 else 0 end)) * `gaji`.`gaji_perhari`) * `pendidikan`.`penambahan`) AS `plus_gaji` from ((((((`pegawai` left join `jabatan` on((`jabatan`.`id` = `pegawai`.`jabatan_id`))) left join `pendidikan` on((`pendidikan`.`id` = `pegawai`.`pendidikan_id`))) left join `gaji` on((`gaji`.`jabatan_id` = `pegawai`.`jabatan_id`))) left join `absen` on((`absen`.`kode_pegawai` = `pegawai`.`kode`))) left join `keterangan` on((`keterangan`.`id` = `absen`.`keterangan_id`))) left join `bpjs` on((0 <> 1))) group by year(`absen`.`tanggal`),month(`absen`.`tanggal`),`pegawai`.`id`;
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `vw_gaji_total` AS select year(`absen`.`tanggal`) AS `tahun`,month(`absen`.`tanggal`) AS `bulan`,`pegawai`.`id` AS `id_pegawai`,`pegawai`.`kode` AS `kode_pegawai`,`pegawai`.`nama` AS `nama_pegawai`,`pegawai`.`jenis_kelamin` AS `jenis_kelamin`,`pegawai`.`pendidikan_id` AS `pendidikan_id`,`pendidikan`.`nama` AS `nama_pendidikan`,`pegawai`.`jabatan_id` AS `jabatan_id`,`jabatan`.`nama` AS `nama_jabatan`,sum((case when (`absen`.`keterangan_id` = 1) then 1 else 0 end)) AS `total_hadir`,sum((case when (`absen`.`keterangan_id` = 2) then 1 else 0 end)) AS `total_tidakhadir`,sum((case when (`absen`.`keterangan_id` = 3) then 1 else 0 end)) AS `total_sakit`,`gaji`.`gaji_perhari` AS `gaji_perhari`,`pendidikan`.`penambahan` AS `penambahan`,`bpjs`.`potongan` AS `potongan_bpjs`,((((sum((case when (`absen`.`keterangan_id` = 1) then 1 else 0 end)) * `gaji`.`gaji_perhari`) * `pendidikan`.`penambahan`) + (sum((case when (`absen`.`keterangan_id` = 1) then 1 else 0 end)) * `gaji`.`gaji_perhari`)) - ((((sum((case when (`absen`.`keterangan_id` = 1) then 1 else 0 end)) * `gaji`.`gaji_perhari`) * `pendidikan`.`penambahan`) + (sum((case when (`absen`.`keterangan_id` = 1) then 1 else 0 end)) * `gaji`.`gaji_perhari`)) * `bpjs`.`potongan`)) AS `total_gaji`,((((sum((case when (`absen`.`keterangan_id` = 1) then 1 else 0 end)) * `gaji`.`gaji_perhari`) * `pendidikan`.`penambahan`) + (sum((case when (`absen`.`keterangan_id` = 1) then 1 else 0 end)) * `gaji`.`gaji_perhari`)) * `bpjs`.`potongan`) AS `potongan_gaji`,((sum((case when (`absen`.`keterangan_id` = 1) then 1 else 0 end)) * `gaji`.`gaji_perhari`) * `pendidikan`.`penambahan`) AS `plus_gaji` from ((((((`pegawai` left join `jabatan` on((`jabatan`.`id` = `pegawai`.`jabatan_id`))) left join `pendidikan` on((`pendidikan`.`id` = `pegawai`.`pendidikan_id`))) left join `gaji` on((`gaji`.`jabatan_id` = `pegawai`.`jabatan_id`))) left join `absen` on((`absen`.`kode_pegawai` = `pegawai`.`kode`))) left join `keterangan` on((`keterangan`.`id` = `absen`.`keterangan_id`))) left join `bpjs` on((0 <> 1))) group by year(`absen`.`tanggal`),month(`absen`.`tanggal`),`pegawai`.`id`;
 
 -- Dumping structure for view db_pegawai.vw_pegawai
 -- Removing temporary table and create final VIEW structure
 DROP TABLE IF EXISTS `vw_pegawai`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_pegawai` AS select `pegawai`.`id` AS `id_pegawai`,`pegawai`.`kode` AS `kode_pegawai`,`pegawai`.`nama` AS `nama_pegawai`,`pegawai`.`jenis_kelamin` AS `jenis_kelamin`,`pegawai`.`alamat` AS `alamat`,`pegawai`.`pendidikan_id` AS `pendidikan_id`,`pendidikan`.`nama` AS `nama_pendidikan`,`pegawai`.`jabatan_id` AS `jabatan_id`,`jabatan`.`nama` AS `nama_jabatan` from (((`pegawai` left join `jabatan` on((`jabatan`.`id` = `pegawai`.`jabatan_id`))) left join `pendidikan` on((`pendidikan`.`id` = `pegawai`.`pendidikan_id`))) left join `bpjs` on((`bpjs`.`id` = `pegawai`.`bpjs_id`)));
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `vw_pegawai` AS select `pegawai`.`id` AS `id_pegawai`,`pegawai`.`kode` AS `kode_pegawai`,`pegawai`.`nama` AS `nama_pegawai`,`pegawai`.`jenis_kelamin` AS `jenis_kelamin`,`pegawai`.`alamat` AS `alamat`,`pegawai`.`pendidikan_id` AS `pendidikan_id`,`pendidikan`.`nama` AS `nama_pendidikan`,`pegawai`.`jabatan_id` AS `jabatan_id`,`jabatan`.`nama` AS `nama_jabatan` from ((`pegawai` left join `jabatan` on((`jabatan`.`id` = `pegawai`.`jabatan_id`))) left join `pendidikan` on((`pendidikan`.`id` = `pegawai`.`pendidikan_id`)));
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
