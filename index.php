@@ -37,6 +37,16 @@ if (isset($_GET['error']) && $_GET['error'] === 'pegawai_sudah_absen') {
                         </select></td>
                     </tr>
                     <tr>
+                        <td>Tanggal</td>
+                        <td>:</td>
+                        <td><input type="text" name='tanggal' value="<?php echo date("Y-m-d");?>" disabled></td>
+                    </tr>
+                    <tr>
+                        <td>Jam</td>
+                        <td>:</td>
+                        <td><input type="text" name='jam_masuk' value= "<?php echo date("H:i:s"); ?>"></td>
+                    </tr>
+                    <tr>
                         <td><input type="submit" name='absen' value="Kirim"></td>
                         <td>:</td>
                         <td><input type="reset" value="Batal"></td>
@@ -47,10 +57,10 @@ if (isset($_GET['error']) && $_GET['error'] === 'pegawai_sudah_absen') {
         <div class="data-today">
             <table border=1>
             <tr>
-                <th>Tanggal</th>
                 <th>Kode</th>
                 <th>Nama</th>
                 <th>Status</th>
+                <th>Tanggal</th>
                 <th>Jam Masuk</th>
                 <th>Jam Keluar</th>
             </tr>
@@ -68,10 +78,10 @@ if (isset($_GET['error']) && $_GET['error'] === 'pegawai_sudah_absen') {
     
         ?>
              <tr>
-            <td><?php echo $tanggal; ?></td>
-            <td><?php echo $kode; ?></td>
-            <td><?php echo $nama; ?></td>
-            <td><?php echo $keterangan; ?></td>
+                 <td><?php echo $kode; ?></td>
+                 <td><?php echo $nama; ?></td>
+                 <td><?php echo $keterangan; ?></td>
+                 <td><?php echo $tanggal; ?></td>
             <td><?php echo $in; ?></td>
             <td>
             <?php 

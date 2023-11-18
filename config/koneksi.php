@@ -13,4 +13,4 @@ if(!$conn){
     die('koneksi gagal: ' . mysqli_connect_error());
 }
 
-?>
+date_default_timezone_set('Asia/Jakarta');
