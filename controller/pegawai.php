@@ -15,7 +15,7 @@ if (isset($_POST["input"])) {
         header("Location: ../index.php");
         exit; // Penting untuk menghentikan eksekusi kode selanjutnya
     } else {
-        header("Location: ../master-pegawai.php");
+        header("Location: ../pegawai.php");
         echo "Error: " . $sql . "<br>" . $conn->error;
         
     }
@@ -40,7 +40,7 @@ if (isset($_POST["edit"])) {
         header("Location: ../index.php");
         exit; // Penting untuk menghentikan eksekusi kode selanjutnya
     } else {
-        header("Location: ../master-pegawai.php");
+        header("Location: ../pegawai.php");
         echo "Error: " . $sql . "<br>" . $conn->error;
         
     }
@@ -60,16 +60,16 @@ if (isset($_GET["kode"])) {
         $sql= "DELETE FROM pegawai WHERE kode='$kode' ";
         if ($conn->query($sql) === true) {
             // Jika berhasil, arahkan kembali ke halaman yang sama
-            header("Location: ../master-pegawai.php");
+            header("Location: ../pegawai.php");
             exit; // Penting untuk menghentikan eksekusi kode selanjutnya
         } else {
-            header("Location: ../master-pegawai.php");
+            header("Location: ../pegawai.php");
             echo "Error: " . $sql . "<br>" . $conn->error;
             
         }
         exit; // Penting untuk menghentikan eksekusi kode selanjutnya
     } else {
-        header("Location: ../master-pegawai.php");
+        header("Location: ../pegawai.php");
         echo "Error: " . $sql . "<br>" . $conn->error;
         
     }
