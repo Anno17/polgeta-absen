@@ -1,6 +1,6 @@
 <footer>
 <div class="container-footer">
-    <h3>copyright by iki_abok</h3>
+    <h3>copyright by iki</h3>
 </div>
 </footer>
 
